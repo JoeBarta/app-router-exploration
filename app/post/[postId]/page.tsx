@@ -1,7 +1,8 @@
-import { postComment } from '@/app/actions'
+// import { postComment } from '@/app/actions'
 import { AddComment } from '@/components/AddComment'
 import { Comments } from '@/components/Comments'
 import { Post, User, Comment } from '@/types/types'
+import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
 import { Suspense } from 'react'
 
@@ -42,6 +43,21 @@ export default async function Home({ params }: { params: { postId: string } }) {
 	// Sequential fetch for user details as we won't have userID suntil we get post
 	const user = await getUser(post.userId)
 
+	// another neat approach
+	const addPostComment = async (comment: { name: string; body: string }) => {
+		'use server'
+
+		await fetch(`https://jsonplaceholder.typicode.com/posts/${params.postId}/comments`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(comment),
+		})
+
+		revalidatePath(`/posts/${params.postId}/comments`)
+	}
+
 	return (
 		<main className="flex min-h-screen flex-col items-center justify-between p-24">
 			<Link href="/">Back to home</Link>
@@ -58,7 +74,7 @@ export default async function Home({ params }: { params: { postId: string } }) {
 				<Comments comments={comments} />
 			</Suspense>
 
-			<AddComment postComment={postComment} postId={post.id} />
+			<AddComment addPostComment={addPostComment} />
 		</main>
 	)
 }

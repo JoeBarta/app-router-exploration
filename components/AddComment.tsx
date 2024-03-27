@@ -4,23 +4,18 @@ import { AddCommentParam } from '@/app/actions'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 
-export const AddComment = ({
-	postComment,
-	postId,
-}: {
-	postComment: (comment: AddCommentParam, postId: number) => Promise<any>
-	postId: number
-}) => {
+export const AddComment = ({ addPostComment }: { addPostComment: (comment: AddCommentParam) => Promise<any> }) => {
 	const [name, setName] = useState('')
 	const [body, setBody] = useState('')
 
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault()
-		postComment({ name, body }, postId)
-	}
+	// technically I don't gave to do any of this crap .. I can make this 'use server
+	// const handleSubmit = async (e: React.FormEvent) => {
+	// 	e.preventDefault()
+	// 	postComment({ name, body }, postId)
+	// }
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<form action={() => addPostComment({ name, body })}>
 			<input
 				className="text-black"
 				type="text"

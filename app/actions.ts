@@ -7,6 +7,7 @@ export interface AddCommentParam {
 	body: string
 }
 
+// one approach
 export async function postComment(comment: AddCommentParam, postId: number) {
 	try {
 		await fetch(`https://jsonplaceholder.typicode.com/posts/${postId}/comments`, {
