@@ -1,3 +1,5 @@
+import { postComment } from '@/app/actions'
+import { AddComment } from '@/components/AddComment'
 import { Comments } from '@/components/Comments'
 import { Post, User, Comment } from '@/types/types'
 import Link from 'next/link'
@@ -55,6 +57,8 @@ export default async function Home({ params }: { params: { postId: string } }) {
 			<Suspense fallback={<div>Loading comments ... </div>}>
 				<Comments comments={comments} />
 			</Suspense>
+
+			<AddComment postComment={postComment} postId={post.id} />
 		</main>
 	)
 }
